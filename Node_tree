@@ -1,0 +1,109 @@
+//***************************************************************************
+//
+//		File:			Tree.h
+//		
+//		Student:		John Karvas
+//
+//		Assignment:	 	Program  #6
+//
+//		Course Name:		Data Structures II
+//
+//		Course Number:	COSC 3050 - 01
+//
+//		Due:			May 14, 2013
+//
+//
+//		
+//
+//		Other files required: 
+//			1.	drvrTree.cpp
+//			2.	
+//		
+//**************************************************************************
+#ifndef TREE
+#define TREE
+struct treeNode {
+	treeNode* left;		// pointer to left subtree of treeNode 
+	char data;			// stores character
+	treeNode* right;		// pointer to right subtree of treeNode
+};
+class Tree {
+private:
+	treeNode* root;		// pointer to root of tree
+	void addBST(treeNode*& root, treeNode* newNode);
+public:
+	Tree();				// constructor
+	~Tree();			// destructor
+	void insert(char);
+	void deleteBST(treeNode*, char);
+	treeNode* getRoot();
+};
+
+Tree::Tree() {
+	root = NULL;
+}
+Tree::~Tree() {
+
+}
+// Deletes item from tree.
+void Tree::deleteBST(treeNode* root, char item)
+{
+treeNode* tempPtr;
+if (item < root->data)
+		deleteBST(root->left, item); 
+else if (item > root->data)
+		deleteBST(root->right, item);  
+else
+//****   item==root->key  *******
+{
+		if (root->left == NULL)
+		{
+			tempPtr=root;
+			root = root->right;
+			delete tempPtr;
+		}
+		else if (root->right == NULL)
+		{
+			tempPtr=root;
+			root = root->left;
+			delete tempPtr;
+		}
+		else
+		{
+			tempPtr=root->left;
+			while(tempPtr->right != NULL)
+				tempPtr=tempPtr->right;
+			root->data = tempPtr->data;
+			deleteBST(root->left,tempPtr->data);
+		}
+	}
+}
+
+void Tree::insert(char item) {
+	treeNode* pNew;
+	pNew = new treeNode;    // creates a treeNode pointed to by pNew
+	pNew->data = item;          // sets the data portion of the treeNode 
+      // the data passed from the driver 
+	pNew->right = NULL;	// sets the pointer to the right subtree // to NULL
+	pNew->left = NULL;	// sets the pointer to the left subtree  // to NULL
+	addBST(root, pNew);	// passes the root of the ADT’s tree 								// and the treeNode where the new data 								// resides to the recursive function 								// addBST						}
+}
+
+void Tree::addBST(treeNode*& root, treeNode* newNode) {
+	
+	if(root == NULL){				//if tree is empty, or leaf is reached						//add new treeNode to tree
+		root = newNode;			//by setting the root = new treeNode
+	}
+	else {
+		if(newNode->data < root->data)		//if character < root character
+			addBST(root->left, newNode);	//go down the left side of tree
+		else
+			addBST(root->right, newNode);      //if character >= root character
+	}						         //go down the right side of tree
+}
+
+treeNode* Tree::getRoot() {
+	return root;
+}
+
+#endif	
